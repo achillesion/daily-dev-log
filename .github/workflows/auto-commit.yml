@@ -1,0 +1,31 @@
+name: Auto Commit Every 30 Minutes
+
+on:
+  schedule:
+    - cron: "*/30 * * * *" # every 30 minutes
+  workflow_dispatch:
+
+jobs:
+  update-log:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Run update script
+        run: |
+          python update.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "Ahmad"
+          git config user.email "your-email@example.com"
+          git add .
+          git commit -m "Automated update - $(date)"
+          git push
